@@ -4,18 +4,46 @@
 
 @layer base {
   :root {
-    --color-primary: #4F46E5;
-    --color-primary-dark: #4338CA;
-    --color-secondary: #7C3AED;
-    --color-accent: #06B6D4;
-    --color-success: #10B981;
-    --color-warning: #F59E0B;
-    --color-danger: #EF4444;
-    --color-bg: #F8FAFC;
-    --color-surface: #FFFFFF;
-    --color-text: #1E293B;
-    --color-text-muted: #64748B;
-    --color-border: #E2E8F0;
+    --brand: hsl(215, 72%, 52%);
+    --brand-soft: hsl(215, 72%, 96%);
+    --brand-mid: hsl(215, 60%, 42%);
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --surface2: #f0f2f8;
+    --border: rgba(0, 0, 0, 0.08);
+    --text: #1a1d2e;
+    --text2: #5a6070;
+    --text3: #9099ae;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+    --green: #22c55e;
+    --green-soft: #f0fdf4;
+    --amber: #f59e0b;
+    --amber-soft: #fffbeb;
+    --red: #ef4444;
+    --red-soft: #fef2f2;
+    --teal: #14b8a6;
+    --teal-soft: #f0fdfa;
+  }
+
+  /* ── PRESET THEMES ── */
+  [data-theme="ocean"]  { --brand: hsl(215, 72%, 52%); --brand-soft: hsl(215, 72%, 96%); --brand-mid: hsl(215, 60%, 42%); }
+  [data-theme="forest"] { --brand: hsl(150, 60%, 38%); --brand-soft: hsl(150, 60%, 96%); --brand-mid: hsl(150, 55%, 28%); }
+  [data-theme="sunset"] { --brand: hsl(22,  90%, 52%);  --brand-soft: hsl(22,  90%, 96%);  --brand-mid: hsl(22,  80%, 40%); }
+  [data-theme="rose"]   { --brand: hsl(345, 72%, 52%); --brand-soft: hsl(345, 72%, 96%); --brand-mid: hsl(345, 60%, 42%); }
+  [data-theme="violet"] { --brand: hsl(265, 65%, 55%); --brand-soft: hsl(265, 65%, 96%); --brand-mid: hsl(265, 55%, 42%); }
+
+  [data-theme="dark"] {
+    --bg: #12131a;
+    --surface: #1c1e2a;
+    --surface2: #252838;
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #e8eaf2;
+    --text2: #9099ae;
+    --text3: #5a6070;
+    --shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
   }
 
   * {
@@ -27,28 +55,71 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-800 font-sans antialiased;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', ui-sans-serif, system-ui;
+    @apply antialiased;
+    transition: background 0.3s, color 0.3s;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display font-semibold;
+    font-family: 'Lora', ui-serif, Georgia;
+    @apply font-semibold;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+    background-color: var(--brand);
+    @apply text-white font-bold px-4 py-2 rounded-lg transition-all duration-200;
+  }
+  .btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
   }
 
   .btn-secondary {
-    @apply bg-white hover:bg-slate-50 text-slate-700 font-medium px-4 py-2 rounded-lg border border-slate-200 transition-colors duration-200;
+    background: none;
+    border: 1.5px solid var(--border);
+    color: var(--text2);
+    @apply font-bold px-4 py-2 rounded-lg transition-all duration-200;
+  }
+  .btn-secondary:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+    background-color: var(--brand-soft);
   }
 
   .card {
-    @apply bg-white rounded-xl border border-slate-200 shadow-sm;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    @apply overflow-hidden;
+    transition: background 0.3s;
   }
 
   .input-field {
-    @apply w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-800 placeholder-slate-400;
+    width: 100%;
+    background-color: var(--surface2);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    @apply px-3 py-2 text-sm outline-none transition-all duration-200;
+    font-family: 'Nunito', ui-sans-serif, system-ui;
+  }
+  .input-field:focus {
+    border-color: var(--brand);
+  }
+  .input-field::placeholder {
+    color: var(--text3);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    @apply text-xs font-bold;
   }
 }
