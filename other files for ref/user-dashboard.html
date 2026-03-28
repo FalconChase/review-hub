@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ReviewHub — My Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Lora:wght@500;600&display=swap" rel="stylesheet"/>
+<style>
+  /* ── THEME TOKENS ── */
+  :root {
+    --hue: 215;
+    --brand: hsl(var(--hue), 72%, 52%);
+    --brand-soft: hsl(var(--hue), 72%, 96%);
+    --brand-mid: hsl(var(--hue), 60%, 42%);
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --surface2: #f0f2f8;
+    --border: rgba(0,0,0,0.08);
+    --text: #1a1d2e;
+    --text2: #5a6070;
+    --text3: #9099ae;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.13);
+    --sidebar-w: 240px;
+    --green: #22c55e; --green-soft: #f0fdf4;
+    --amber: #f59e0b; --amber-soft: #fffbeb;
+    --red: #ef4444;   --red-soft: #fef2f2;
+    --teal: #14b8a6;  --teal-soft: #f0fdfa;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* PRESET THEMES */
+  [data-theme="ocean"]  { --hue:215; --brand:hsl(215,72%,52%); --brand-soft:hsl(215,72%,96%); --brand-mid:hsl(215,60%,42%); }
+  [data-theme="forest"] { --hue:150; --brand:hsl(150,60%,38%); --brand-soft:hsl(150,60%,96%); --brand-mid:hsl(150,55%,28%); }
+  [data-theme="sunset"] { --hue:22;  --brand:hsl(22,90%,52%);  --brand-soft:hsl(22,90%,96%);  --brand-mid:hsl(22,80%,40%); }
+  [data-theme="rose"]   { --hue:345; --brand:hsl(345,72%,52%); --brand-soft:hsl(345,72%,96%); --brand-mid:hsl(345,60%,42%); }
+  [data-theme="violet"] { --hue:265; --brand:hsl(265,65%,55%); --brand-soft:hsl(265,65%,96%); --brand-mid:hsl(265,55%,42%); }
+  [data-theme="dark"]   { --bg:#12131a; --surface:#1c1e2a; --surface2:#252838; --border:rgba(255,255,255,0.08); --text:#e8eaf2; --text2:#9099ae; --text3:#5a6070; --shadow:0 2px 16px rgba(0,0,0,0.4); }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:var(--bg); color:var(--text); min-height:100vh; display:flex; transition:background .3s,color .3s; }
+
+  /* ── SIDEBAR ── */
+  .sidebar{
+    width:var(--sidebar-w); min-height:100vh; background:var(--surface);
+    border-right:1px solid var(--border); display:flex; flex-direction:column;
+    position:fixed; top:0; left:0; z-index:100; transition:background .3s,border-color .3s;
+  }
+  .sidebar-logo{ padding:24px 20px 20px; border-bottom:1px solid var(--border); }
+  .logo-mark{ display:flex; align-items:center; gap:10px; }
+  .logo-icon{ width:36px; height:36px; background:var(--brand); border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:18px; font-weight:600; color:#fff; }
+  .logo-text{ font-family:'Lora',serif; font-size:18px; font-weight:600; color:var(--text); line-height:1.1; }
+  .logo-sub{ font-size:10px; font-weight:600; color:var(--brand); letter-spacing:.08em; text-transform:uppercase; }
+
+  .nav{ flex:1; padding:16px 12px; display:flex; flex-direction:column; gap:2px; overflow-y:auto; }
+  .nav-section{ font-size:10px; font-weight:700; color:var(--text3); letter-spacing:.1em; text-transform:uppercase; padding:12px 8px 6px; }
+  .nav-item{
+    display:flex; align-items:center; gap:10px;
+    padding:10px 12px; border-radius:var(--radius-sm);
+    font-size:14px; font-weight:600; color:var(--text2);
+    cursor:pointer; transition:all .18s; border:none; background:none; width:100%; text-align:left;
+  }
+  .nav-item:hover{ background:var(--brand-soft); color:var(--brand); }
+  .nav-item.active{ background:var(--brand-soft); color:var(--brand); }
+  .nav-icon{ font-size:17px; width:22px; flex-shrink:0; }
+  .nav-lock{ margin-left:auto; font-size:12px; opacity:.45; }
+
+  /* Product Nav Items */
+  .product-nav{
+    display:flex; align-items:center; gap:10px; padding:9px 12px;
+    border-radius:var(--radius-sm); cursor:pointer; transition:all .18s;
+    font-size:13px; font-weight:600; color:var(--text2);
+    border:none; background:none; width:100%; text-align:left;
+  }
+  .product-nav:hover{ background:var(--brand-soft); color:var(--brand); }
+  .product-nav.active{ background:var(--brand-soft); color:var(--brand); }
+  .product-nav-icon{ width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+
+  .sidebar-footer{ padding:16px 12px; border-top:1px solid var(--border); }
+  .user-chip{ display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--brand-soft); border-radius:var(--radius-sm); }
+  .user-avatar{ width:34px; height:34px; background:var(--brand); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; flex-shrink:0; }
+  .user-name{ font-size:13px; font-weight:700; color:var(--text); }
+  .user-role{ font-size:11px; color:var(--brand); font-weight:600; }
+
+  /* ── MAIN ── */
+  .main{ margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; }
+
+  /* ── TOPBAR ── */
+  .topbar{
+    background:var(--surface); border-bottom:1px solid var(--border);
+    padding:14px 28px; display:flex; align-items:center; gap:16px;
+    position:sticky; top:0; z-index:50; transition:background .3s;
+  }
+  .topbar-title{ font-family:'Lora',serif; font-size:20px; font-weight:600; color:var(--text); flex:1; }
+  .topbar-title span{ font-size:13px; font-family:'Nunito',sans-serif; color:var(--text2); font-weight:500; display:block; }
+  .icon-btn{ width:38px; height:38px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface2); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:17px; transition:all .18s; color:var(--text2); }
+  .icon-btn:hover{ background:var(--brand-soft); color:var(--brand); border-color:var(--brand); }
+  .notif-dot{ position:relative; }
+  .notif-dot::after{ content:''; position:absolute; top:6px; right:6px; width:8px; height:8px; background:var(--red); border-radius:50%; border:2px solid var(--surface); }
+
+  /* THEME PANEL */
+  .theme-panel{ display:none; position:fixed; top:70px; right:20px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow-lg); z-index:200; min-width:220px; }
+  .theme-panel.open{ display:block; }
+  .theme-label{ font-size:11px; font-weight:700; color:var(--text3); letter-spacing:.1em; text-transform:uppercase; margin-bottom:12px; }
+  .theme-swatches{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .swatch{ width:32px; height:32px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all .18s; }
+  .swatch:hover,.swatch.active{ border-color:var(--text); transform:scale(1.12); }
+  .swatch[data-t="ocean"] { background:hsl(215,72%,52%); }
+  .swatch[data-t="forest"]{ background:hsl(150,60%,38%); }
+  .swatch[data-t="sunset"]{ background:hsl(22,90%,52%); }
+  .swatch[data-t="rose"]  { background:hsl(345,72%,52%); }
+  .swatch[data-t="violet"]{ background:hsl(265,65%,55%); }
+  .swatch[data-t="dark"]  { background:#1c1e2a; border:3px solid #444; }
+  .theme-mode-toggle{ display:flex; align-items:center; justify-content:space-between; font-size:13px; font-weight:600; color:var(--text); }
+  .toggle-pill{ width:40px; height:22px; background:var(--brand); border-radius:11px; position:relative; cursor:pointer; transition:background .2s; }
+  .toggle-pill::after{ content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; background:#fff; border-radius:50%; transition:left .2s; }
+  .toggle-pill.off{ background:var(--border); }
+  .toggle-pill.off::after{ left:21px; }
+
+  /* ── CONTENT ── */
+  .content{ padding:28px; display:flex; flex-direction:column; gap:24px; }
+
+  /* ── HERO BANNER ── */
+  .hero{
+    background:var(--brand); border-radius:var(--radius);
+    padding:28px 32px; display:flex; align-items:center; justify-content:space-between;
+    position:relative; overflow:hidden; animation:fadeUp .4s ease both;
+  }
+  .hero::before{
+    content:''; position:absolute; right:-40px; top:-40px;
+    width:200px; height:200px; background:rgba(255,255,255,0.08); border-radius:50%;
+  }
+  .hero::after{
+    content:''; position:absolute; right:60px; bottom:-60px;
+    width:160px; height:160px; background:rgba(255,255,255,0.05); border-radius:50%;
+  }
+  .hero-text h2{ font-family:'Lora',serif; font-size:22px; font-weight:600; color:#fff; margin-bottom:6px; }
+  .hero-text p{ font-size:14px; color:rgba(255,255,255,0.82); line-height:1.5; max-width:400px; }
+  .hero-stats{ display:flex; gap:28px; z-index:1; }
+  .hero-stat{ text-align:center; }
+  .hero-stat-val{ font-size:28px; font-weight:800; color:#fff; line-height:1; }
+  .hero-stat-label{ font-size:11px; color:rgba(255,255,255,0.75); font-weight:600; margin-top:4px; }
+
+  @keyframes fadeUp{ from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── STAT CARDS ── */
+  .stats-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .stat-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; transition:box-shadow .2s,transform .2s,background .3s; animation:fadeUp .4s ease both; }
+  .stat-card:hover{ box-shadow:var(--shadow-lg); transform:translateY(-2px); }
+  .stat-card:nth-child(1){animation-delay:.05s} .stat-card:nth-child(2){animation-delay:.1s} .stat-card:nth-child(3){animation-delay:.15s}
+  .stat-icon{ width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:12px; }
+  .stat-icon.blue{ background:var(--brand-soft); }
+  .stat-icon.green{ background:var(--green-soft); }
+  .stat-icon.amber{ background:var(--amber-soft); }
+  .stat-value{ font-size:26px; font-weight:800; color:var(--text); line-height:1; margin-bottom:4px; }
+  .stat-label{ font-size:13px; color:var(--text2); font-weight:500; }
+  .stat-sub{ font-size:11px; color:var(--text3); margin-top:4px; }
+
+  /* ── SECTION HEADING ── */
+  .section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .section-title{ font-family:'Lora',serif; font-size:18px; font-weight:600; color:var(--text); }
+  .btn{ padding:8px 16px; border-radius:var(--radius-sm); font-size:13px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif; transition:all .18s; border:none; }
+  .btn-outline{ background:none; border:1.5px solid var(--border); color:var(--text2); }
+  .btn-outline:hover{ border-color:var(--brand); color:var(--brand); background:var(--brand-soft); }
+  .btn-primary{ background:var(--brand); color:#fff; }
+  .btn-primary:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+  .btn-sm{ padding:6px 14px; font-size:12px; }
+
+  /* ── PRODUCT CARDS ── */
+  .products-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; }
+  .product-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    overflow:hidden; transition:box-shadow .2s,transform .2s,background .3s;
+    animation:fadeUp .4s ease both; cursor:pointer;
+  }
+  .product-card:hover{ box-shadow:var(--shadow-lg); transform:translateY(-3px); }
+  .product-card:nth-child(1){animation-delay:.1s} .product-card:nth-child(2){animation-delay:.15s} .product-card:nth-child(3){animation-delay:.2s}
+
+  .product-card-top{ padding:20px 22px 16px; }
+  .product-card-header{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+  .product-card-icon{ width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .badge{ display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700; }
+  .badge.green{ color:var(--green); background:var(--green-soft); }
+  .badge.amber{ color:var(--amber); background:var(--amber-soft); }
+  .badge.blue { color:var(--brand); background:var(--brand-soft); }
+  .badge.teal { color:var(--teal); background:var(--teal-soft); }
+
+  .product-card-name{ font-family:'Lora',serif; font-size:16px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .product-card-cat{ font-size:12px; color:var(--text3); margin-bottom:12px; }
+  .product-card-desc{ font-size:13px; color:var(--text2); line-height:1.55; }
+
+  /* PROGRESS BAR */
+  .progress-wrap{ margin-top:16px; }
+  .progress-head{ display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin-bottom:6px; }
+  .progress-label{ color:var(--text2); }
+  .progress-pct{ color:var(--brand); }
+  .progress-bar{ height:7px; background:var(--surface2); border-radius:99px; overflow:hidden; }
+  .progress-fill{ height:100%; background:var(--brand); border-radius:99px; transition:width .6s cubic-bezier(.4,0,.2,1); }
+
+  /* MODULE PILLS */
+  .module-pills{ display:flex; gap:6px; flex-wrap:wrap; margin-top:14px; }
+  .module-pill{ padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; background:var(--surface2); color:var(--text3); transition:all .15s; cursor:pointer; }
+  .module-pill:hover{ background:var(--brand-soft); color:var(--brand); }
+  .module-pill.done{ background:var(--green-soft); color:var(--green); }
+  .module-pill.active-m{ background:var(--brand-soft); color:var(--brand); }
+
+  .product-card-bottom{
+    padding:14px 22px; border-top:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--surface2);
+  }
+  .card-meta{ font-size:12px; color:var(--text3); }
+  .card-meta strong{ color:var(--text2); }
+
+  /* ── TWO COL ── */
+  .two-col{ display:grid; grid-template-columns:1fr 320px; gap:20px; }
+
+  /* ── SCORE HISTORY ── */
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; transition:background .3s; animation:fadeUp .4s ease .25s both; }
+  .card-header{ padding:18px 22px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+  .card-title{ font-family:'Lora',serif; font-size:16px; font-weight:600; color:var(--text); }
+
+  .score-row{ display:grid; grid-template-columns:36px 1fr 80px 70px 80px; align-items:center; gap:12px; padding:12px 22px; border-bottom:1px solid var(--border); transition:background .15s; }
+  .score-row:last-child{ border-bottom:none; }
+  .score-row:hover{ background:var(--surface2); }
+  .score-row.hdr{ font-size:11px; font-weight:700; color:var(--text3); letter-spacing:.06em; text-transform:uppercase; padding-top:10px; padding-bottom:10px; }
+  .score-row.hdr:hover{ background:none; }
+  .score-icon{ width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; }
+  .score-name{ font-size:13px; font-weight:700; color:var(--text); }
+  .score-mod{ font-size:11px; color:var(--text3); }
+  .score-val{ font-size:20px; font-weight:800; }
+  .score-val.pass{ color:var(--green); }
+  .score-val.warn{ color:var(--amber); }
+  .score-val.fail{ color:var(--red); }
+  .score-date{ font-size:11px; color:var(--text3); }
+
+  /* ── UPCOMING ── */
+  .upcoming-list{ padding:4px 0 8px; }
+  .upcoming-item{ display:flex; align-items:center; gap:12px; padding:12px 22px; border-bottom:1px solid var(--border); transition:background .15s; cursor:pointer; }
+  .upcoming-item:last-child{ border-bottom:none; }
+  .upcoming-item:hover{ background:var(--surface2); }
+  .up-dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .up-name{ font-size:13px; font-weight:700; color:var(--text); }
+  .up-sub{ font-size:11px; color:var(--text3); margin-top:2px; }
+  .up-date{ margin-left:auto; font-size:11px; font-weight:700; color:var(--brand); white-space:nowrap; }
+
+  /* ── STREAK CARD ── */
+  .streak-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px 22px; display:flex; align-items:center; gap:16px; animation:fadeUp .4s ease .3s both; }
+  .streak-flame{ font-size:36px; }
+  .streak-val{ font-size:28px; font-weight:800; color:var(--amber); line-height:1; }
+  .streak-label{ font-size:13px; color:var(--text2); font-weight:600; }
+  .streak-sub{ font-size:11px; color:var(--text3); margin-top:3px; }
+  .streak-days{ display:flex; gap:5px; margin-top:10px; }
+  .streak-day{ width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; }
+  .streak-day.done{ background:var(--amber-soft); color:var(--amber); }
+  .streak-day.today{ background:var(--amber); color:#fff; }
+  .streak-day.miss{ background:var(--surface2); color:var(--text3); }
+
+  /* ── QUIZ MODAL ── */
+  .modal-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:300; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+  .modal-overlay.open{ display:flex; }
+  .modal{ background:var(--surface); border-radius:var(--radius); padding:28px; width:540px; max-width:95vw; box-shadow:var(--shadow-lg); animation:popIn .2s ease; }
+  @keyframes popIn{ from{opacity:0;transform:scale(.94)} to{opacity:1;transform:scale(1)} }
+  .modal-title{ font-family:'Lora',serif; font-size:20px; font-weight:600; margin-bottom:4px; }
+  .modal-sub{ font-size:13px; color:var(--text2); margin-bottom:22px; }
+
+  /* QUIZ FLOW */
+  .quiz-progress{ height:6px; background:var(--surface2); border-radius:99px; overflow:hidden; margin-bottom:20px; }
+  .quiz-progress-fill{ height:100%; background:var(--brand); border-radius:99px; transition:width .4s ease; }
+  .quiz-qnum{ font-size:11px; font-weight:700; color:var(--brand); letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px; }
+  .quiz-question{ font-size:16px; font-weight:700; color:var(--text); line-height:1.5; margin-bottom:20px; }
+  .quiz-options{ display:flex; flex-direction:column; gap:10px; margin-bottom:22px; }
+  .quiz-option{
+    padding:13px 16px; border-radius:var(--radius-sm); border:1.5px solid var(--border);
+    font-size:14px; font-weight:600; color:var(--text2); cursor:pointer; transition:all .18s;
+    background:var(--surface2); text-align:left;
+  }
+  .quiz-option:hover{ border-color:var(--brand); color:var(--brand); background:var(--brand-soft); }
+  .quiz-option.selected{ border-color:var(--brand); color:var(--brand); background:var(--brand-soft); }
+  .quiz-option.correct{ border-color:var(--green); color:var(--green); background:var(--green-soft); pointer-events:none; }
+  .quiz-option.wrong{ border-color:var(--red); color:var(--red); background:var(--red-soft); pointer-events:none; }
+  .quiz-actions{ display:flex; align-items:center; justify-content:space-between; }
+  .quiz-feedback{ font-size:13px; font-weight:700; padding:8px 14px; border-radius:var(--radius-sm); display:none; }
+  .quiz-feedback.show{ display:block; }
+  .quiz-feedback.correct{ background:var(--green-soft); color:var(--green); }
+  .quiz-feedback.wrong{ background:var(--red-soft); color:var(--red); }
+
+  /* RESULT SCREEN */
+  .quiz-result{ text-align:center; padding:10px 0; }
+  .result-score{ font-size:56px; font-weight:800; line-height:1; margin:10px 0 6px; }
+  .result-score.pass{ color:var(--green); }
+  .result-score.warn{ color:var(--amber); }
+  .result-label{ font-size:18px; font-weight:700; color:var(--text); margin-bottom:6px; }
+  .result-sub{ font-size:13px; color:var(--text2); margin-bottom:24px; }
+  .result-actions{ display:flex; gap:10px; justify-content:center; }
+
+  /* TOAST */
+  .toast{ position:fixed; bottom:24px; right:24px; z-index:500; background:var(--text); color:var(--bg); padding:14px 20px; border-radius:var(--radius-sm); font-size:14px; font-weight:600; box-shadow:var(--shadow-lg); display:none; }
+  .toast.show{ display:flex; align-items:center; gap:10px; animation:slideIn .3s ease; }
+  @keyframes slideIn{ from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+  ::-webkit-scrollbar{ width:6px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:3px; }
+</style>
+</head>
+<body data-theme="ocean">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">R</div>
+      <div>
+        <div class="logo-text">ReviewHub</div>
+        <div class="logo-sub">My Learning</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-section">Menu</div>
+    <button class="nav-item active" onclick="switchTab('home',this)">
+      <span class="nav-icon">🏠</span> Home
+    </button>
+    <button class="nav-item" onclick="switchTab('scores',this)">
+      <span class="nav-icon">📊</span> My Scores
+    </button>
+    <button class="nav-item" onclick="switchTab('progress',this)">
+      <span class="nav-icon">📈</span> Progress
+    </button>
+
+    <div class="nav-section">My Products</div>
+    <button class="product-nav active-m" onclick="showToast('📋 Opening NLE Reviewer Pro…')">
+      <div class="product-nav-icon" style="background:#eff6ff">📋</div>
+      NLE Reviewer Pro
+    </button>
+    <button class="product-nav" onclick="showToast('⚖️ Opening Bar Exam Drills…')">
+      <div class="product-nav-icon" style="background:#f0fdf4">⚖️</div>
+      Bar Exam Drills
+    </button>
+    <button class="product-nav" onclick="showToast('🧠 Opening Gen. Knowledge Hub…')">
+      <div class="product-nav-icon" style="background:#fdf4ff">🧠</div>
+      Gen. Knowledge Hub
+    </button>
+
+    <div class="nav-section">Locked</div>
+    <button class="nav-item" style="opacity:.45;cursor:not-allowed">
+      <span class="nav-icon">🔒</span> Civil Eng. Quiz
+      <span class="nav-lock">🔒</span>
+    </button>
+    <button class="nav-item" style="opacity:.45;cursor:not-allowed">
+      <span class="nav-icon">🔒</span> IT Cert. Prep
+      <span class="nav-lock">🔒</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="user-avatar">MR</div>
+      <div>
+        <div class="user-name">Maria Reyes</div>
+        <div class="user-role">3 products active</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">
+      My Dashboard
+      <span>Welcome back, Maria! Keep up the great work. 🌟</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="icon-btn notif-dot" title="Notifications" onclick="showToast('🔔 You have 2 new notifications')">🔔</div>
+      <div class="icon-btn" title="Customize Theme" onclick="toggleThemePanel()">🎨</div>
+    </div>
+  </div>
+
+  <!-- THEME PANEL -->
+  <div class="theme-panel" id="themePanel">
+    <div class="theme-label">Your Theme</div>
+    <div class="theme-swatches">
+      <div class="swatch active" data-t="ocean"  onclick="setTheme('ocean',this)"  title="Ocean"></div>
+      <div class="swatch" data-t="forest" onclick="setTheme('forest',this)" title="Forest"></div>
+      <div class="swatch" data-t="sunset" onclick="setTheme('sunset',this)" title="Sunset"></div>
+      <div class="swatch" data-t="rose"   onclick="setTheme('rose',this)"   title="Rose"></div>
+      <div class="swatch" data-t="violet" onclick="setTheme('violet',this)" title="Violet"></div>
+      <div class="swatch" data-t="dark"   onclick="setTheme('dark',this)"   title="Dark"></div>
+    </div>
+    <div class="theme-mode-toggle">
+      <span>Dark mode</span>
+      <div class="toggle-pill off" id="darkToggle" onclick="toggleDark()"></div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-text">
+        <h2>Hello, Maria! Ready to review? 📚</h2>
+        <p>You're on a <strong style="color:#fff">7-day streak</strong>. Your NLE Reviewer is at 68% — push through Module 5 today!</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-val">68%</div>
+          <div class="hero-stat-label">Overall Progress</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">89%</div>
+          <div class="hero-stat-label">Best Score</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">7🔥</div>
+          <div class="hero-stat-label">Day Streak</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">📦</div>
+        <div class="stat-value">3</div>
+        <div class="stat-label">Active Products</div>
+        <div class="stat-sub">Of 5 total available</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div class="stat-value">34</div>
+        <div class="stat-label">Modules Completed</div>
+        <div class="stat-sub">Across all products</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber">⏱️</div>
+        <div class="stat-value">14h</div>
+        <div class="stat-label">Study Time</div>
+        <div class="stat-sub">This month</div>
+      </div>
+    </div>
+
+    <!-- MY PRODUCTS -->
+    <div>
+      <div class="section-head">
+        <div class="section-title">My Products</div>
+        <button class="btn btn-outline btn-sm" onclick="showToast('📦 Showing all 3 products…')">View All</button>
+      </div>
+      <div class="products-grid">
+
+        <!-- PRODUCT 1 -->
+        <div class="product-card" onclick="openQuiz()">
+          <div class="product-card-top">
+            <div class="product-card-header">
+              <div class="product-card-icon" style="background:#eff6ff">📋</div>
+              <span class="badge green">● Active</span>
+            </div>
+            <div class="product-card-name">NLE Reviewer Pro</div>
+            <div class="product-card-cat">Nursing Licensure Exam · Licensure</div>
+            <div class="product-card-desc">Comprehensive review covering all NLE subjects — Fundamentals, Medical-Surgical, OB, Pediatric, and Community Health Nursing.</div>
+            <div class="progress-wrap">
+              <div class="progress-head">
+                <span class="progress-label">Overall Progress</span>
+                <span class="progress-pct">68%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+            </div>
+            <div class="module-pills">
+              <div class="module-pill done">✓ M1</div>
+              <div class="module-pill done">✓ M2</div>
+              <div class="module-pill done">✓ M3</div>
+              <div class="module-pill done">✓ M4</div>
+              <div class="module-pill active-m">▶ M5</div>
+              <div class="module-pill">M6</div>
+              <div class="module-pill">M7</div>
+              <div class="module-pill">M8</div>
+            </div>
+          </div>
+          <div class="product-card-bottom">
+            <div class="card-meta">Best: <strong>89%</strong> · 4 attempts</div>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openQuiz()">▶ Continue</button>
+          </div>
+        </div>
+
+        <!-- PRODUCT 2 -->
+        <div class="product-card" onclick="showToast('⚖️ Opening Bar Exam Drills…')">
+          <div class="product-card-top">
+            <div class="product-card-header">
+              <div class="product-card-icon" style="background:#f0fdf4">⚖️</div>
+              <span class="badge green">● Active</span>
+            </div>
+            <div class="product-card-name">Bar Exam Drills</div>
+            <div class="product-card-cat">Philippine Bar Examination · Licensure</div>
+            <div class="product-card-desc">Bar exam-style questions across Civil Law, Criminal Law, Commercial Law, Remedial Law, and Legal Ethics.</div>
+            <div class="progress-wrap">
+              <div class="progress-head">
+                <span class="progress-label">Overall Progress</span>
+                <span class="progress-pct">32%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:32%"></div></div>
+            </div>
+            <div class="module-pills">
+              <div class="module-pill done">✓ M1</div>
+              <div class="module-pill done">✓ M2</div>
+              <div class="module-pill active-m">▶ M3</div>
+              <div class="module-pill">M4</div>
+              <div class="module-pill">M5</div>
+              <div class="module-pill">M6</div>
+            </div>
+          </div>
+          <div class="product-card-bottom">
+            <div class="card-meta">Best: <strong>76%</strong> · 2 attempts</div>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast('⚖️ Resuming Bar Exam Drills…')">▶ Continue</button>
+          </div>
+        </div>
+
+        <!-- PRODUCT 3 -->
+        <div class="product-card" onclick="showToast('🧠 Opening Gen. Knowledge Hub…')">
+          <div class="product-card-top">
+            <div class="product-card-header">
+              <div class="product-card-icon" style="background:#fdf4ff">🧠</div>
+              <span class="badge teal">● Active</span>
+            </div>
+            <div class="product-card-name">Gen. Knowledge Hub</div>
+            <div class="product-card-cat">Mixed Topics · General</div>
+            <div class="product-card-desc">Wide-ranging questions on history, science, math, geography, and current events — great for general aptitude prep.</div>
+            <div class="progress-wrap">
+              <div class="progress-head">
+                <span class="progress-label">Overall Progress</span>
+                <span class="progress-pct">85%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+            </div>
+            <div class="module-pills">
+              <div class="module-pill done">✓ M1</div>
+              <div class="module-pill done">✓ M2</div>
+              <div class="module-pill done">✓ M3</div>
+              <div class="module-pill done">✓ M4</div>
+              <div class="module-pill done">✓ M5</div>
+              <div class="module-pill active-m">▶ M6</div>
+            </div>
+          </div>
+          <div class="product-card-bottom">
+            <div class="card-meta">Best: <strong>92%</strong> · 6 attempts</div>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast('🧠 Resuming Gen. Knowledge Hub…')">▶ Continue</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SCORES + UPCOMING -->
+    <div class="two-col">
+
+      <!-- SCORE HISTORY -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Quiz Scores</div>
+          <button class="btn btn-outline btn-sm" onclick="showToast('📊 Loading full score history…')">All scores</button>
+        </div>
+        <div class="score-row hdr">
+          <div></div><div>Module</div><div>Score</div><div>Result</div><div>Date</div>
+        </div>
+        <div class="score-row">
+          <div class="score-icon" style="background:#eff6ff">📋</div>
+          <div><div class="score-name">NLE Reviewer Pro</div><div class="score-mod">Module 4 · Med-Surg</div></div>
+          <div class="score-val pass">89%</div>
+          <div><span class="badge green">Passed</span></div>
+          <div class="score-date">Today</div>
+        </div>
+        <div class="score-row">
+          <div class="score-icon" style="background:#fdf4ff">🧠</div>
+          <div><div class="score-name">Gen. Knowledge Hub</div><div class="score-mod">Module 5 · Science</div></div>
+          <div class="score-val pass">92%</div>
+          <div><span class="badge green">Passed</span></div>
+          <div class="score-date">Yesterday</div>
+        </div>
+        <div class="score-row">
+          <div class="score-icon" style="background:#f0fdf4">⚖️</div>
+          <div><div class="score-name">Bar Exam Drills</div><div class="score-mod">Module 2 · Civil Law</div></div>
+          <div class="score-val warn">76%</div>
+          <div><span class="badge amber">Review</span></div>
+          <div class="score-date">3 days ago</div>
+        </div>
+        <div class="score-row">
+          <div class="score-icon" style="background:#eff6ff">📋</div>
+          <div><div class="score-name">NLE Reviewer Pro</div><div class="score-mod">Module 3 · OB Nursing</div></div>
+          <div class="score-val pass">84%</div>
+          <div><span class="badge green">Passed</span></div>
+          <div class="score-date">5 days ago</div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- STREAK -->
+        <div class="streak-card">
+          <div class="streak-flame">🔥</div>
+          <div style="flex:1">
+            <div class="streak-val">7</div>
+            <div class="streak-label">Day Study Streak</div>
+            <div class="streak-sub">Keep going — 3 more days for a badge!</div>
+            <div class="streak-days">
+              <div class="streak-day done" title="Mon">M</div>
+              <div class="streak-day done" title="Tue">T</div>
+              <div class="streak-day done" title="Wed">W</div>
+              <div class="streak-day done" title="Thu">T</div>
+              <div class="streak-day done" title="Fri">F</div>
+              <div class="streak-day done" title="Sat">S</div>
+              <div class="streak-day today" title="Today">S</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPCOMING -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Up Next</div>
+          </div>
+          <div class="upcoming-list">
+            <div class="upcoming-item" onclick="openQuiz()">
+              <div class="up-dot" style="background:var(--brand)"></div>
+              <div>
+                <div class="up-name">NLE Module 5</div>
+                <div class="up-sub">Pediatric Nursing · 25 questions</div>
+              </div>
+              <div class="up-date">Due today</div>
+            </div>
+            <div class="upcoming-item" onclick="showToast('⚖️ Opening Bar Exam Module 3…')">
+              <div class="up-dot" style="background:var(--amber)"></div>
+              <div>
+                <div class="up-name">Bar Exam M3</div>
+                <div class="up-sub">Criminal Law · 30 questions</div>
+              </div>
+              <div class="up-date">Tomorrow</div>
+            </div>
+            <div class="upcoming-item" onclick="showToast('🧠 Opening Gen. Knowledge Module 6…')">
+              <div class="up-dot" style="background:var(--teal)"></div>
+              <div>
+                <div class="up-name">Gen. Knowledge M6</div>
+                <div class="up-sub">Geography · 20 questions</div>
+              </div>
+              <div class="up-date">In 2 days</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- QUIZ MODAL -->
+<div class="modal-overlay" id="quizModal">
+  <div class="modal">
+    <div id="quizScreen">
+      <div class="modal-title" id="quizTitle">NLE Reviewer Pro</div>
+      <div class="modal-sub">Module 5 · Pediatric Nursing</div>
+      <div class="quiz-progress"><div class="quiz-progress-fill" id="quizProgressBar" style="width:0%"></div></div>
+      <div class="quiz-qnum" id="quizQNum">Question 1 of 5</div>
+      <div class="quiz-question" id="quizQuestion">Loading…</div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-actions">
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <button class="btn btn-primary" id="quizNextBtn" style="margin-left:auto" onclick="nextQuestion()">Next →</button>
+      </div>
+    </div>
+    <div id="resultScreen" style="display:none">
+      <div class="quiz-result">
+        <div style="font-size:40px;margin-bottom:8px">🎉</div>
+        <div class="result-score pass" id="resultScore">—</div>
+        <div class="result-label" id="resultLabel">—</div>
+        <div class="result-sub" id="resultSub">—</div>
+        <div class="result-actions">
+          <button class="btn btn-outline" onclick="closeQuiz()">Close</button>
+          <button class="btn btn-primary" onclick="restartQuiz()">Try Again 🔄</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── THEME ── */
+  let currentTheme='ocean', isDark=false;
+  function setTheme(t,el){
+    document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+    if(el) el.classList.add('active');
+    if(t==='dark'){ isDark=true; document.body.setAttribute('data-theme','dark'); document.getElementById('darkToggle').classList.remove('off'); }
+    else { currentTheme=t; isDark=false; document.body.setAttribute('data-theme',t); document.getElementById('darkToggle').classList.add('off'); }
+  }
+  function toggleDark(){
+    isDark=!isDark;
+    const tog=document.getElementById('darkToggle');
+    if(isDark){ document.body.setAttribute('data-theme','dark'); tog.classList.remove('off'); }
+    else { document.body.setAttribute('data-theme',currentTheme); tog.classList.add('off'); }
+  }
+  function toggleThemePanel(){ document.getElementById('themePanel').classList.toggle('open'); }
+  document.addEventListener('click',e=>{ if(!e.target.closest('.theme-panel')&&!e.target.closest('.icon-btn')) document.getElementById('themePanel').classList.remove('open'); });
+
+  /* ── NAV ── */
+  function switchTab(tab,el){
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+    el.classList.add('active');
+    const titles={home:'My Dashboard',scores:'My Scores',progress:'My Progress'};
+    const subs={home:'Welcome back, Maria! Keep up the great work. 🌟',scores:'All your quiz results in one place.',progress:'Track your learning journey.'};
+    document.getElementById('topbarTitle').innerHTML=`${titles[tab]}<span>${subs[tab]}</span>`;
+    showToast(`📂 Loading ${titles[tab]}…`);
+  }
+
+  /* ── QUIZ ── */
+  const questions=[
+    { q:"A 4-year-old child is admitted with epiglottitis. Which of the following positions is most appropriate?", opts:["Supine","Trendelenburg","Sitting upright (tripod position)","Side-lying"], ans:2, exp:"Sitting upright (tripod position) reduces airway obstruction and eases breathing." },
+    { q:"Which vaccine is given at birth to prevent tuberculosis?", opts:["OPV","MMR","BCG","Hepatitis B"], ans:2, exp:"BCG (Bacillus Calmette-Guérin) is given at birth or as early as possible to protect against tuberculosis." },
+    { q:"A child weighing 20 kg needs IV fluids. Using the Holliday-Segar method, what is the daily fluid requirement?", opts:["1500 mL","1600 mL","1000 mL","2000 mL"], ans:1, exp:"Holliday-Segar: 100 mL/kg for first 10 kg + 50 mL/kg for next 10 kg = 1000 + 600 = 1600 mL/day." },
+    { q:"Which developmental milestone is expected of a 12-month-old infant?", opts:["Speaks in sentences","Rides a tricycle","Walks with one hand held","Skips on one foot"], ans:2, exp:"At 12 months, infants typically walk with one hand held or may begin taking first independent steps." },
+    { q:"A nurse is assessing a child for signs of dehydration. Which finding indicates SEVERE dehydration?", opts:["Slightly dry mucous membranes","Sunken fontanel and no tears","Increased urine output","Normal skin turgor"], ans:1, exp:"Sunken fontanel and no tears are classic signs of severe dehydration requiring immediate intervention." },
+  ];
+
+  let qIndex=0, score=0, answered=false;
+
+  function openQuiz(){
+    qIndex=0; score=0; answered=false;
+    document.getElementById('quizScreen').style.display='block';
+    document.getElementById('resultScreen').style.display='none';
+    document.getElementById('quizModal').classList.add('open');
+    renderQuestion();
+  }
+  function closeQuiz(){ document.getElementById('quizModal').classList.remove('open'); }
+  function restartQuiz(){ qIndex=0; score=0; answered=false; document.getElementById('quizScreen').style.display='block'; document.getElementById('resultScreen').style.display='none'; renderQuestion(); }
+
+  function renderQuestion(){
+    const q=questions[qIndex];
+    answered=false;
+    document.getElementById('quizQNum').textContent=`Question ${qIndex+1} of ${questions.length}`;
+    document.getElementById('quizQuestion').textContent=q.q;
+    document.getElementById('quizProgressBar').style.width=`${(qIndex/questions.length)*100}%`;
+    const fb=document.getElementById('quizFeedback');
+    fb.className='quiz-feedback'; fb.textContent='';
+    document.getElementById('quizNextBtn').textContent=qIndex===questions.length-1?'Finish ✓':'Next →';
+    const opts=document.getElementById('quizOptions');
+    opts.innerHTML='';
+    q.opts.forEach((o,i)=>{
+      const btn=document.createElement('button');
+      btn.className='quiz-option'; btn.textContent=o;
+      btn.onclick=()=>selectAnswer(i);
+      opts.appendChild(btn);
+    });
+  }
+
+  function selectAnswer(i){
+    if(answered) return;
+    answered=true;
+    const q=questions[qIndex];
+    const opts=document.querySelectorAll('.quiz-option');
+    opts.forEach(b=>b.style.pointerEvents='none');
+    const fb=document.getElementById('quizFeedback');
+    if(i===q.ans){
+      opts[i].classList.add('correct');
+      score++;
+      fb.textContent='✅ Correct! '+q.exp;
+      fb.className='quiz-feedback correct show';
+    } else {
+      opts[i].classList.add('wrong');
+      opts[q.ans].classList.add('correct');
+      fb.textContent='❌ Incorrect. '+q.exp;
+      fb.className='quiz-feedback wrong show';
+    }
+  }
+
+  function nextQuestion(){
+    if(!answered){ showToast('⚠️ Please select an answer first!'); return; }
+    qIndex++;
+    if(qIndex>=questions.length){ showResult(); return; }
+    renderQuestion();
+  }
+
+  function showResult(){
+    document.getElementById('quizScreen').style.display='none';
+    document.getElementById('resultScreen').style.display='block';
+    const pct=Math.round((score/questions.length)*100);
+    const rs=document.getElementById('resultScore');
+    rs.textContent=pct+'%';
+    rs.className='result-score '+(pct>=75?'pass':'warn');
+    document.getElementById('resultLabel').textContent=pct>=75?'🎉 Passed!':'📖 Keep Reviewing';
+    document.getElementById('resultSub').textContent=`You got ${score} out of ${questions.length} questions correct. ${pct>=75?'Great job, Maria!':'Don\'t give up — review the explanations and try again!'}`;
+    document.getElementById('quizProgressBar').style.width='100%';
+  }
+
+  document.querySelectorAll('.modal-overlay').forEach(m=>{ m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); }); });
+
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+  }
+
+  /* Animate progress bars on load */
+  window.addEventListener('load',()=>{
+    document.querySelectorAll('.progress-fill').forEach(b=>{ const w=b.style.width; b.style.width='0'; setTimeout(()=>b.style.width=w,300); });
+  });
+</script>
+</body>
+</html>
