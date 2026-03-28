@@ -1,35 +1,68 @@
-// ─── Subjects / Courses ───────────────────────────────────────────────────────
+// ─── Subjects / Products ─────────────────────────────────────────────────────
 export const subjects = [
   {
     id: 'subject-1',
     title: 'General Education',
     description: 'Core academic competencies across mathematics, science, and language.',
-    icon: 'BookOpen',
+    icon: '📚',
+    iconBg: '#eff6ff',
     color: 'indigo',
     topicCount: 8,
     quizCount: 24,
+    category: 'Licensure',
+    exam: 'Licensure Exam for Teachers',
+    status: 'active',
+    userCount: 12,
+    moduleCount: 8,
   },
   {
     id: 'subject-2',
     title: 'Professional Education',
     description: 'Principles of teaching, curriculum design, and classroom management.',
-    icon: 'GraduationCap',
+    icon: '🎓',
+    iconBg: '#f5f3ff',
     color: 'violet',
     topicCount: 10,
     quizCount: 30,
+    category: 'Licensure',
+    exam: 'Licensure Exam for Teachers',
+    status: 'active',
+    userCount: 8,
+    moduleCount: 10,
   },
   {
     id: 'subject-3',
     title: 'Specialization',
     description: 'In-depth subject matter expertise for your chosen teaching field.',
-    icon: 'Layers',
+    icon: '🧩',
+    iconBg: '#ecfeff',
     color: 'cyan',
     topicCount: 12,
     quizCount: 36,
+    category: 'Licensure',
+    exam: 'Licensure Exam for Teachers',
+    status: 'active',
+    userCount: 15,
+    moduleCount: 12,
   },
-]
+  {
+    id: 'subject-4',
+    title: 'Assessment & Evaluation',
+    description: 'Designing tests, rubrics, and measuring student learning outcomes.',
+    icon: '📊',
+    iconBg: '#fefce8',
+    color: 'amber',
+    topicCount: 6,
+    quizCount: 18,
+    category: 'Licensure',
+    exam: 'Licensure Exam for Teachers',
+    status: 'draft',
+    userCount: 4,
+    moduleCount: 6,
+  },
+];
 
-// ─── Topics ───────────────────────────────────────────────────────────────────
+// ─── Topics / Modules ─────────────────────────────────────────────────────────
 export const topics = [
   {
     id: 'topic-1',
@@ -38,6 +71,7 @@ export const topics = [
     description: 'Integers, rational numbers, polynomials, and algebraic expressions.',
     questionCount: 40,
     difficulty: 'Medium',
+    status: 'done',
   },
   {
     id: 'topic-2',
@@ -46,30 +80,78 @@ export const topics = [
     description: 'Inferencing, main idea, vocabulary in context, and critical reading.',
     questionCount: 35,
     difficulty: 'Easy',
+    status: 'done',
   },
   {
     id: 'topic-3',
+    subjectId: 'subject-1',
+    title: 'Science Concepts',
+    description: 'Biology, chemistry, physics, and earth science essentials.',
+    questionCount: 30,
+    difficulty: 'Medium',
+    status: 'current',
+  },
+  {
+    id: 'topic-4',
+    subjectId: 'subject-1',
+    title: 'Philippine History & Government',
+    description: 'Historical events, governance structures, and the constitution.',
+    questionCount: 28,
+    difficulty: 'Easy',
+    status: 'pending',
+  },
+  {
+    id: 'topic-5',
     subjectId: 'subject-2',
     title: 'Principles of Teaching',
     description: 'Instructional methods, lesson planning, and learner-centered approaches.',
     questionCount: 50,
     difficulty: 'Medium',
+    status: 'done',
   },
   {
-    id: 'topic-4',
+    id: 'topic-6',
     subjectId: 'subject-2',
     title: 'Child and Adolescent Development',
     description: 'Developmental stages, learning theories, and individual differences.',
     questionCount: 45,
     difficulty: 'Hard',
+    status: 'current',
   },
-]
+  {
+    id: 'topic-7',
+    subjectId: 'subject-2',
+    title: 'The Teaching Profession',
+    description: 'Ethics, professionalism, and the role of teachers in society.',
+    questionCount: 30,
+    difficulty: 'Easy',
+    status: 'pending',
+  },
+  {
+    id: 'topic-8',
+    subjectId: 'subject-3',
+    title: 'Curriculum Development',
+    description: 'Designing, implementing, and evaluating curricula.',
+    questionCount: 35,
+    difficulty: 'Hard',
+    status: 'done',
+  },
+  {
+    id: 'topic-9',
+    subjectId: 'subject-3',
+    title: 'Educational Technology',
+    description: 'Integrating technology in teaching and learning.',
+    questionCount: 30,
+    difficulty: 'Medium',
+    status: 'current',
+  },
+];
 
-// ─── Sample Quiz Questions ────────────────────────────────────────────────────
+// ─── Questions ────────────────────────────────────────────────────────────────
 export const questions = [
   {
     id: 'q-1',
-    topicId: 'topic-1',
+    topicId: 'topic-3',
     type: 'multiple-choice',
     difficulty: 'Medium',
     stem: 'Which of the following is a prime number?',
@@ -80,12 +162,11 @@ export const questions = [
       { id: 'd', text: '21' },
     ],
     correctAnswer: 'c',
-    explanation:
-      '13 is divisible only by 1 and itself, making it prime. 1 is not prime by definition; 9 = 3×3; 21 = 3×7.',
+    explanation: '13 is divisible only by 1 and itself, making it prime. 1 is not prime by definition; 9 = 3×3; 21 = 3×7.',
   },
   {
     id: 'q-2',
-    topicId: 'topic-1',
+    topicId: 'topic-3',
     type: 'multiple-choice',
     difficulty: 'Easy',
     stem: 'What is the value of x in the equation 2x + 6 = 14?',
@@ -111,12 +192,11 @@ export const questions = [
       { id: 'd', text: 'Silent independent seatwork' },
     ],
     correctAnswer: 'b',
-    explanation:
-      'Socratic questioning challenges students to analyze, evaluate, and synthesize — hallmarks of higher-order thinking in Bloom\'s Taxonomy.',
+    explanation: "Socratic questioning challenges students to analyze, evaluate, and synthesize — hallmarks of higher-order thinking in Bloom's Taxonomy.",
   },
   {
     id: 'q-4',
-    topicId: 'topic-4',
+    topicId: 'topic-3',
     type: 'multiple-choice',
     difficulty: 'Hard',
     stem: "According to Vygotsky's sociocultural theory, learning is most effective when:",
@@ -127,27 +207,104 @@ export const questions = [
       { id: 'd', text: 'Content is broken into the smallest possible units.' },
     ],
     correctAnswer: 'b',
-    explanation:
-      "Vygotsky's ZPD describes tasks a learner can perform with guidance but not yet independently — the sweet spot for scaffolded learning.",
+    explanation: "Vygotsky's ZPD describes tasks a learner can perform with guidance but not yet independently — the sweet spot for scaffolded learning.",
   },
-]
+  {
+    id: 'q-5',
+    topicId: 'topic-3',
+    type: 'multiple-choice',
+    difficulty: 'Easy',
+    stem: 'What does DNA stand for?',
+    choices: [
+      { id: 'a', text: 'Deoxyribonucleic Acid' },
+      { id: 'b', text: 'Deoxyribose Nucleic Arrangement' },
+      { id: 'c', text: 'Dynamic Nucleic Acid' },
+      { id: 'd', text: 'Deoxyribose Nitrogen Acid' },
+    ],
+    correctAnswer: 'a',
+    explanation: 'DNA stands for Deoxyribonucleic Acid, the molecule that carries genetic information in living organisms.',
+  },
+  {
+    id: 'q-6',
+    topicId: 'topic-3',
+    type: 'multiple-choice',
+    difficulty: 'Medium',
+    stem: "Newton's First Law of Motion states that an object at rest:",
+    choices: [
+      { id: 'a', text: 'Accelerates due to gravity' },
+      { id: 'b', text: 'Stays at rest unless acted upon by an external force' },
+      { id: 'c', text: 'Has no mass' },
+      { id: 'd', text: 'Always moves in a circular path' },
+    ],
+    correctAnswer: 'b',
+    explanation: "Newton's First Law (Law of Inertia) states that an object remains at rest or in uniform motion unless acted upon by an unbalanced external force.",
+  },
+];
 
-// ─── Mock User Progress ───────────────────────────────────────────────────────
+// ─── Users ────────────────────────────────────────────────────────────────────
+export const users = [
+  { uid: 'user-001', name: 'Juan dela Cruz', email: 'juan@email.com', avatar: 'JC', avatarColor: '#4f87d4', joinedDaysAgo: 2, status: 'active', activeProducts: ['subject-1', 'subject-2', 'subject-3'] },
+  { uid: 'user-002', name: 'Maria Santos', email: 'maria@email.com', avatar: 'MS', avatarColor: '#22c55e', joinedDaysAgo: 4, status: 'active', activeProducts: ['subject-1'] },
+  { uid: 'user-003', name: 'Ana Lim', email: 'ana@email.com', avatar: 'AL', avatarColor: '#f59e0b', joinedDaysAgo: 7, status: 'pending', activeProducts: [] },
+  { uid: 'user-004', name: 'Rico Cruz', email: 'rico@email.com', avatar: 'RC', avatarColor: '#14b8a6', joinedDaysAgo: 14, status: 'active', activeProducts: ['subject-1', 'subject-3'] },
+  { uid: 'user-005', name: 'Lisa Ramos', email: 'lisa@email.com', avatar: 'LR', avatarColor: '#a855f7', joinedDaysAgo: 20, status: 'active', activeProducts: ['subject-2', 'subject-3'] },
+];
+
+// ─── Scores ───────────────────────────────────────────────────────────────────
+export const scores = [
+  { id: 's1', userId: 'user-001', subjectId: 'subject-1', topicId: 'topic-1', topicTitle: 'Number Theory & Algebra', subjectTitle: 'General Education', score: 80, total: 100, passed: true, date: 'Today' },
+  { id: 's2', userId: 'user-001', subjectId: 'subject-2', topicId: 'topic-5', topicTitle: 'Principles of Teaching', subjectTitle: 'Professional Education', score: 70, total: 100, passed: false, date: 'Yesterday' },
+  { id: 's3', userId: 'user-001', subjectId: 'subject-1', topicId: 'topic-2', topicTitle: 'Reading Comprehension', subjectTitle: 'General Education', score: 65, total: 100, passed: false, date: '3 days ago' },
+  { id: 's4', userId: 'user-001', subjectId: 'subject-3', topicId: 'topic-8', topicTitle: 'Curriculum Development', subjectTitle: 'Specialization', score: 88, total: 100, passed: true, date: '5 days ago' },
+  { id: 's5', userId: 'user-001', subjectId: 'subject-2', topicId: 'topic-6', topicTitle: 'Child & Adolescent Dev.', subjectTitle: 'Professional Education', score: 92, total: 100, passed: true, date: '7 days ago' },
+];
+
+// ─── Activity Log ─────────────────────────────────────────────────────────────
+export const activityLog = [
+  { id: 'a1', type: 'access_granted', message: 'Access granted to Juan dela Cruz for General Education', time: '2 minutes ago', dotColor: '#22c55e' },
+  { id: 'a2', type: 'product_added', message: 'New subject Assessment & Evaluation added — saved as draft', time: '1 hour ago', dotColor: '#4f87d4' },
+  { id: 'a3', type: 'user_registered', message: 'New user Ana Lim registered — awaiting access assignment', time: '3 hours ago', dotColor: '#f59e0b' },
+  { id: 'a4', type: 'quiz_completed', message: 'Maria Santos completed General Education — Topic 1 with 94%', time: '5 hours ago', dotColor: '#14b8a6' },
+  { id: 'a5', type: 'license_expiring', message: 'License for Rico Cruz expires in 7 days — consider renewal', time: 'Yesterday', dotColor: '#ef4444' },
+];
+
+// ─── User Progress ────────────────────────────────────────────────────────────
 export const userProgress = {
-  userId: 'user-demo',
+  userId: 'user-001',
   displayName: 'Juan dela Cruz',
   overallScore: 72,
   quizzesCompleted: 14,
   quizzesTotal: 90,
+  streak: 5,
+  studyHoursThisMonth: 12,
+  bestScore: 92,
+  totalModulesCompleted: 11,
+  overallProgress: 72,
+  subjectProgress: {
+    'subject-1': { progress: 65, bestScore: 80, attempts: 3 },
+    'subject-2': { progress: 48, bestScore: 92, attempts: 4 },
+    'subject-3': { progress: 82, bestScore: 88, attempts: 3 },
+  },
   topicProgress: {
     'topic-1': { completed: 20, total: 40, lastScore: 80 },
     'topic-2': { completed: 10, total: 35, lastScore: 65 },
-    'topic-3': { completed: 15, total: 50, lastScore: 70 },
-    'topic-4': { completed: 5,  total: 45, lastScore: 55 },
+    'topic-5': { completed: 15, total: 50, lastScore: 70 },
+    'topic-6': { completed: 5,  total: 45, lastScore: 92 },
+    'topic-8': { completed: 12, total: 35, lastScore: 88 },
   },
   recentActivity: [
-    { date: '2026-03-27', topicId: 'topic-1', score: 80, questionsAttempted: 10 },
-    { date: '2026-03-25', topicId: 'topic-3', score: 70, questionsAttempted: 10 },
-    { date: '2026-03-22', topicId: 'topic-2', score: 65, questionsAttempted: 10 },
+    { date: '2026-03-29', topicId: 'topic-1', score: 80, questionsAttempted: 10 },
+    { date: '2026-03-28', topicId: 'topic-5', score: 70, questionsAttempted: 10 },
+    { date: '2026-03-27', topicId: 'topic-2', score: 65, questionsAttempted: 10 },
+    { date: '2026-03-25', topicId: 'topic-8', score: 88, questionsAttempted: 10 },
+    { date: '2026-03-24', topicId: 'topic-6', score: 92, questionsAttempted: 10 },
   ],
-}
+};
+
+// ─── Admin Stats ──────────────────────────────────────────────────────────────
+export const adminStats = {
+  totalProducts: 4,
+  totalUsers: 24,
+  licensesGranted: 41,
+  avgPassRate: 78,
+};
